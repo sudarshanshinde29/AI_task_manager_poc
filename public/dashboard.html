@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactions - Interaction Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-6 py-12 max-w-6xl">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Interactions</h1>
+        <button
+          onclick="openModal()"
+          class="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-semibold tracking-wide shadow-sm transition duration-200 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transform hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Create New Interaction
+        </button>
+      </div>
+
+      <div id="interactionList" class="space-y-4">
+        <!-- Interactions will be loaded here -->
+      </div>
+    </div>
+
+    <div id="createModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+      <div class="relative top-20 mx-auto p-8 border w-[450px] shadow-lg rounded-xl bg-white">
+        <div class="mt-2">
+          <h3 class="text-2xl font-bold text-gray-800 mb-6">Create New Interaction</h3>
+          <div class="flex justify-end space-x-4 pt-4">
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="px-6 py-3 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onclick="createInteraction()"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-semibold tracking-wide shadow-sm transition duration-200 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function loadInteractions() {
+        try {
+          const response = await fetch("/api/v1/interactions");
+          if (response.status === 401) {
+            window.location.href = "/auth.html";
+            return;
+          }
+          const interactions = await response.json();
+          const interactionList = document.getElementById("interactionList");
+
+          if (interactions.length === 0) {
+            interactionList.innerHTML = `
+              <div class="text-center py-12">
+                <p class="text-gray-500 text-lg">No interactions found.</p>
+                <p class="text-gray-400 mt-2">Create your first interaction to get started!</p>
+              </div>
+            `;
+            return;
+          }
+
+          interactionList.innerHTML = interactions
+            .map(
+              (interaction) => `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition duration-200 ease-in-out hover:shadow-md">
+                  <h3 class="font-bold text-xl text-gray-800">${interaction.title}</h3>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                      interaction.status === "Completed" ? "bg-green-50 text-green-700" : "bg-yellow-50 text-yellow-700"
+                    }">
+                      ${interaction.status}
+                    </span>
+                    <button
+                      onclick="window.location.href='/interaction.html?id=${interaction.interactionId}'"
+                      class="text-blue-600 hover:text-blue-700 font-medium text-sm px-4 py-2 rounded-lg hover:bg-blue-50 transition duration-150"
+                    >
+                      Continue Interaction →
+                    </button>
+                  </div>
+                </div>
+              `,
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading interactions:", error);
+        }
+      }
+
+      function openModal() {
+        document.getElementById("createModal").classList.remove("hidden");
+      }
+
+      function closeModal() {
+        document.getElementById("createModal").classList.add("hidden");
+      }
+
+      async function createInteraction() {
+        try {
+          const response = await fetch("/api/v1/interactions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: "New Interaction" }), // Adjust the payload as needed
+          });
+
+          if (response.ok) {
+            const { interactionId } = await response.json();
+            window.location.href = `/interaction.html?id=${interactionId}`;
+          } else {
+            const data = await response.json();
+            alert(data.error || "Failed to create interaction");
+          }
+        } catch (error) {
+          console.error("Error creating interaction:", error);
+          alert("Failed to create interaction");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadInteractions();
+      });
+    </script>
+  </body>
+</html>

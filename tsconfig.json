@@ -8,7 +8,7 @@
     "lib": [
       "ESNext"
     ],
-    "types": [
+    "types": ["node", "hono",
         "@cloudflare/workers-types/2023-07-01"
     ],
     "jsx": "react-jsx",
