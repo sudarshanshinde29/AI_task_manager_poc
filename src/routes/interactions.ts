@@ -55,8 +55,8 @@ const createInteraction = async (ctx: HonoCtx) => {
   
     const interactionDO = getInteractionDO(ctx);
     const interactionId = await interactionDO.createInteraction(
-    //   body.title as InterviewTitle,
-    //   body.skills as InterviewSkill[],
+    //   body.title as interactionTitle,
+    //   body.skills as interactionSkill[],
     );
   
     return ctx.json({ success: true, interactionId });

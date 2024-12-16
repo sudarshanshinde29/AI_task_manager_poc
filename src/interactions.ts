@@ -4,7 +4,7 @@ import { InteractionData, Message } from "./types";
 import { AIService } from "./services/AIService";
 
 export class Interactions extends DurableObject<CloudflareBindings> {
-      // Database service for persistent storage of interview data and messages
+      // Database service for persistent storage of interaction data and messages
   private readonly db: InteractionsDatabaseService
   // We will use it to keep track of all active WebSocket connections for real-time communication
   private sessions: Map<string, { interactionId: string, socket: WebSocket }>;

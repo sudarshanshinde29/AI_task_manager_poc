@@ -22,24 +22,22 @@ export enum InteractionStatus {
     Cancelled = "cancelled", // session terminated early
   } 
 
-  // Defines who sent a message in the interview chat
+  // Defines who sent a message in the interaction chat
 export type MessageRole = "user" | "assistant" | "system";
 
 // Structure of individual messages exchanged during the session
 export interface Message {
   messageId: string; // Unique identifier for the message
-  interactionId: string; // Links message to specific interview
+  interactionId: string; // Links message to specific interaction
   role: MessageRole; // Who sent the message
   content: string; // The actual message content
   timestamp: number; // When the message was sent
 }
 
-// Main data structure that holds all information about an interview session.
+// Main data structure that holds all information about an interaction session.
 // This includes metadata, messages exchanged, and the current status.
 export interface InteractionData {
   interactionId: string;
-//   title: InterviewTitle;
-//   skills: InterviewSkill[];
   messages: Message[];
   status: InteractionStatus;
   createdAt: number;
@@ -89,31 +87,6 @@ export interface EventUpdateParams {
   eventId: string;
   updatedDetails: UpdatedDetails;
 }
-// Input format for creating a new interview session.
-// Simplified interface that accepts basic parameters needed to start an interview.
-// export interface InteractionInput {
-//   title: string;
-//   skills: string[];
-// }
-
-
-// List of event types that the system can manage
-// export enum EventType {
-//   Rehearsal = "Rehearsal",
-//   Meeting = "Meeting",
-//   Tour = "Tour",
-//   Performance = "Performance",
-//   Task = "Task",
-// }
-
-// Status of an event or task in the system
-// export enum EventStatus {
-//   Pending = "pending", // Event created but not confirmed
-//   Scheduled = "scheduled", // Event scheduled successfully
-//   Completed = "completed", // Event completed
-//   Cancelled = "cancelled", // Event was cancelled
-// }
-
 
 // Structure of individual messages exchanged in the system
 export interface Message {
@@ -124,26 +97,3 @@ export interface Message {
   timestamp: number; // When the message was sent
 }
 
-// Main data structure that holds information about an event or task
-// export interface EventData {
-//   eventId: string; // Unique identifier for the event
-//   type: EventType; // Type of event
-//   title: string; // Title or name of the event
-//   date: string; // Date of the event in ISO format
-//   time: string; // Time of the event in 24-hour format
-//   location?: string; // Optional location for the event
-//   duration?: string; // Optional duration for the event
-//   status: EventStatus; // Current status of the event
-//   createdAt: number; // Event creation timestamp
-//   updatedAt: number; // Last update timestamp
-// }
-
-// Input format for creating a new event or task
-// export interface EventInput {
-//   type: EventType; // Type of event
-//   title: string; // Title or name of the event
-//   date?: string; // Optional: date of the event
-//   time?: string; // Optional: time of the event
-//   location?: string; // Optional: location for the event
-//   duration?: string; // Optional: duration for the event
-// }
